@@ -43,17 +43,21 @@ module.exports.createListing=async (req, res, next) => {
     res.redirect(`/listings/${newListing._id}`);
 };
 
-//edit form
-module.exports.renderEditForm=async (req,res)=>{
-    let {id}=req.params;
+// //edit form
+module.exports.renderEditForm = async (req, res, next) => {
+  try {
+    const { id } = req.params;
     const listing = await Listing.findById(id);
-    if(!listing) {
-        req.flash("error","Listings you requested for does not exist!");
-        res.redirect("/listings");
+    if (!listing) {
+      req.flash('error', 'Cannot find listing');
+      return res.redirect('/listings');
     }
-    
-    res.render("./listings/edit.ejs",{listing,originalImage});
+    res.render('listings/edit', { listing });
+  } catch (err) {
+    next(err); // Pass error to Express error handler middleware
+  }
 };
+
 
 //update listings
 module.exports.updateListing=async (req,res)=>{

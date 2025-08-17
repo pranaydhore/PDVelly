@@ -21,6 +21,7 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+const userRoutes = require("./routes/user"); // make sure the file is routes/user.js
 
 
 const listingsRouter=require("./routes/list.js");
@@ -52,8 +53,17 @@ app.use(express.static(path.join(__dirname,"/public")));
 //     res.send("connection successfully.");
 // });
 
+// const store=MongoStore.create({
+//     mongoUrl:dbUrl,
+//     crypto:{
+//         secret:"mysupersecretcode",
+    
+//     },
+//     touchAfter:24*3600,
+// });
 
 const sessionOptions={
+    // store,
     secret:"mysupersecretcode",
     resave:false,
     saveUninitialized: true,
@@ -64,6 +74,16 @@ const sessionOptions={
     }
 };
 
+
+
+// const store=MongoStore.create({
+//     mongoUrl:dbUrl,
+//     crypto:{
+//         secret:"mysupersecretcode",
+    
+//     },
+//     touchAfter:24*3600,
+// })
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -81,6 +101,7 @@ app.use((req, res, next) => {
   next();
 });
 
+
 // app.get("/demouser",async(req,res)=>{
 //     let fakeUser=new User({
 //         email:"student@gmail.com",
@@ -89,6 +110,15 @@ app.use((req, res, next) => {
 //     let registerUser=await User.register(fakeUser,"pranaydhore");
 //     res.send(registerUser);
 // })
+// Assuming you use Express.js
+app.get('/user/profile', (req, res) => {
+    // Get user data as per your backend design
+    const user = { /* ...get user data... */ };
+    res.render('users/profile', { 
+        user: user,
+        active: 'profile' // Ensure 'active' is passed, change value as needed
+    });
+});
 
 
 app.use("/listings",listingsRouter);

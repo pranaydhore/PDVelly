@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile | PDVolley</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar-brand { color: #e84c83 !important; font-weight: bold; font-size: 2rem;}
+        .profile-card { background: #fff; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 2rem; margin-bottom: 2rem; }
+        .sidebar { background: #fff; border-radius: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 2rem 1rem; }
+        .profile-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .active { background: #e84c83 !important; color: #fff !important; }
+        .sidebar a { color: #333; text-decoration: none; display: block; padding: 0.5rem 0; border-radius: 6px; }
+        .sidebar a:hover { background: #e84c83; color: #fff; }
+        .badge-host { background: #e84c83; color: #fff; font-size: 0.9rem; margin-left: .5em;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Navbar -->
+    <nav class="navbar navbar-light bg-light mb-4">
+        <a class="navbar-brand" href="/">PDVolley</a>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Where are you going?" aria-label="Search">
+            <input class="form-control me-2" type="text" placeholder="dd-mm-yyyy">
+            <input class="form-control me-2" type="text" placeholder="dd-mm-yyyy">
+            <input class="form-control me-2" type="number" placeholder="Guests" min="1">
+            <button class="btn btn-pink" style="background:#e84c83;color:white" type="submit">Search</button>
+        </form>
+    </nav>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <div class="text-center mb-2">
+                    <img src="<%= user.avatarUrl || '/images/default-avatar.png' %>" alt="Profile Photo" class="profile-img mb-2">
+                    <div class="fw-bold fs-5"><%= user.name || 'Admin' %>
+                        <% if (user.isHost) { %>
+                            <span class="badge badge-host">Host</span>
+                        <% } %>
+                    </div>
+                    <div class="small text-muted mb-3"><%= user.email %></div>
+                </div>
+                <hr>
+                <a href="/user/become-host" class="mb-2">Become a Host</a>
+                <a href="/listings" class="<%= (typeof active !== 'undefined' && active === 'listings') ? 'active' : '' %>">All Listings</a>
+                <a href="/listings/new" class="<%= (typeof active !== 'undefined' && active === 'create') ? 'active' : '' %>">Create New Listing</a>
+                <a href="/users/profile" class="<%= (typeof active !== 'undefined' && active === 'profile') ? 'active' : '' %>">Profile</a>
+                <a href="/users/favorites" class="<%= (typeof active !== 'undefined' && active === 'favorites') ? 'active' : '' %>">Favorites</a>
+                <hr>
+                <a href="/logout">Log Out</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="profile-card">
+                <h2>Welcome, <%= user.name || 'admin' %>!</h2>
+                <p><strong>Email:</strong> <%= user.email %></p>
+
+                <h5>Your Listings</h5>
+                <% if (user.listings && user.listings.length > 0) { %>
+                    <ul class="list-group mb-3">
+                        <% user.listings.forEach(function(listing) { %>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <%= listing.title %>
+                                <span class="badge bg-secondary"><%= listing.status %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <span class="text-muted mb-3">You have no listings yet.</span>
+                <% } %>
+
+                <h5>Your History</h5>
+                <% if (user.history && user.history.length > 0) { %>
+                    <ul class="list-group mb-3">
+                        <% user.history.forEach(function(hist) { %>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><%= hist.action %></span>
+                                <span class="text-muted small"><%= hist.date %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <span class="text-muted mb-3">No history yet.</span>
+                <% } %>
+
+                <h5>Your Favorites</h5>
+                <% if (user.favorites && user.favorites.length > 0) { %>
+                    <ul class="list-group">
+                        <% user.favorites.forEach(function(fav) { %>
+                            <li class="list-group-item">
+                                <%= fav.title %>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <span class="text-muted">No favorites yet.</span>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
