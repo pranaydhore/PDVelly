@@ -1,7 +1,8 @@
 const Review=require("../models/review.js");
 const Listing=require("../models/listing.js");
 const User=require("../models/user.js");
-
+const Booking = require('../models/bookings.js');
+const userController = require('../controllers/users'); // Adjust path if needed
 // render signup page
 module.exports.renderSignUp=(req,res)=>{
     res.render("../views/users/signup.ejs");
@@ -49,5 +50,18 @@ module.exports.logoutPage=(req,res)=>{
         req.flash("success","You are logged out!");
         res.redirect("/listings");
     })
+};
+
+
+
+module.exports.renderUserProfile = async (req, res, next) => {
+  try {
+    const bookings = await Booking.find({ user: req.user._id })
+      .populate('listing')
+      .sort({ createdAt: -1 });
+    res.render('users/profile', { user: req.user, bookings, active: 'profile' });
+  } catch (e) {
+    next(e);
+  }
 };
 

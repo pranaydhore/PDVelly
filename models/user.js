@@ -1,4 +1,4 @@
-
+const userController = require('../controllers/users'); // Adjust path if needed
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -14,12 +14,19 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+
     listings: [
         {
             type: Schema.Types.ObjectId,
             ref: "Listing"
         }
     ],
+    favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Listing"
+    }
+  ],
     history: [historySchema] // add history array
 }, { timestamps: true });
 

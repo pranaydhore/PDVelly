@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user.js");
@@ -6,13 +5,19 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
 const listingController = require("../controllers/users.js");
+const userController = require('../controllers/users'); // Adjust path if needed
+// const{validateReview, isLoggedIn,isreviewAuthor}=require("../middleware.js");
+const Booking = require("../models/bookings.js");
 
-// Middleware to check if the user is logged in
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    req.flash("error", "You must be signed in first!");
-    res.redirect("/login");
+  if (!req.isAuthenticated()) { // Passport authentication check
+    req.flash('error', 'You must be signed in');
+    return res.redirect('/user/login');
+  }
+  next();
 }
+
+
 
 // signup
 router.route("/signup")
@@ -27,26 +32,73 @@ router.route("/login")
 // logout
 router.get("/logout", listingController.logoutPage);
 
-// ==========================
-// PROFILE PAGE ROUTE
-// GET /user/profile
-router.get(
-    "/profile",
-    isLoggedIn,
-    wrapAsync(async (req, res) => {
-        const user = await User.findById(req.user._id).populate('listings');
-        // Add dummy fallback arrays so EJS won't fail if not present
-        user.listings = user.listings || [];
-        user.history = user.history || [];
-        user.favorites = user.favorites || [];
-        res.render("users/profile", { user, active: "profile" });
-    })
-);
 
-router.get('/favorites', isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id).populate('favorites');
-  res.render('users/favorites', { user, active: 'favorites' });
+
+
+// router.get('/profile', isLoggedIn, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user._id)
+//       .populate('listings')
+//       .populate('favorites');
+
+//     const bookings = await Booking.find({ user: req.user._id }).populate('listing');
+
+//     res.render('users/profile', { user, bookings, active: 'profile' });
+//   } catch (err) {
+//     console.error("PROFILE ROUTE ERROR:", err);
+//     res.status(500).send('Server Error: ' + err.message);
+//   }
+// });
+
+router.get('/profile', isLoggedIn, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('listings')
+      .populate('favorites');
+
+    // Populate listings inside bookings
+    const bookings = await Booking.find({ user: req.user._id })
+      .populate('listing'); // Important: populate the listing field
+
+    res.render('users/profile', { user, bookings, active: 'profile' });
+  } catch (err) {
+    console.error("PROFILE ROUTE ERROR:", err);
+    res.status(500).send('Server Error: ' + err.message);
+  }
 });
+
+
+
+// ----------------- BECOME HOST -----------------
+router.get('/become-host', isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    await User.findByIdAndUpdate(userId, { isHost: true });
+    res.redirect('/user/profile');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+// ----------------- FAVORITES -----------------
+router.get('/favorites', isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const user = await User.findById(userId).populate('favorites');
+
+    res.render('users/favorites', {
+      user,
+      active: 'favorites'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
 
 
 
