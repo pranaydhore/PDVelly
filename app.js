@@ -97,6 +97,7 @@ app.use('/user', userRouter);
 app.use('/bookings', bookingsRouter);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewsRouter);
+app.use('/', userRouter);
 
 // 404 handler - last middleware
 app.use((req, res) => {
