@@ -1,36 +1,35 @@
-const userController = require('../controllers/users'); // Adjust path if needed
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
-// Optional: schema for history items
+const Schema = mongoose.Schema;
+
 const historySchema = new Schema({
-    action: String,
-    date: { type: Date, default: Date.now }
+  action: String,
+  date: { type: Date, default: Date.now }
 });
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        required: true
-    },
-
-    listings: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Listing"
-        }
-    ],
-    favorites: [
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  listings: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Listing"
     }
   ],
-    history: [historySchema] // add history array
+  favorites: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Listing"
+    }
+  ],
+  history: [historySchema]
 }, { timestamps: true });
 
-// Adds username and password fields, plus authentication methods
+// 👉 this adds username + hash + salt, and .register(), .authenticate() methods
 userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", userSchema);

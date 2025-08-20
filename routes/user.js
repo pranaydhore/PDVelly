@@ -6,7 +6,6 @@ const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
 const listingController = require("../controllers/users.js");
 const userController = require('../controllers/users'); // Adjust path if needed
-// const{validateReview, isLoggedIn,isreviewAuthor}=require("../middleware.js");
 const Booking = require("../models/bookings.js");
 
 function isLoggedIn(req, res, next) {
@@ -34,22 +33,6 @@ router.get("/logout", listingController.logoutPage);
 
 
 
-
-// router.get('/profile', isLoggedIn, async (req, res) => {
-//   try {
-//     const user = await User.findById(req.user._id)
-//       .populate('listings')
-//       .populate('favorites');
-
-//     const bookings = await Booking.find({ user: req.user._id }).populate('listing');
-
-//     res.render('users/profile', { user, bookings, active: 'profile' });
-//   } catch (err) {
-//     console.error("PROFILE ROUTE ERROR:", err);
-//     res.status(500).send('Server Error: ' + err.message);
-//   }
-// });
-
 router.get('/profile', isLoggedIn, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -68,7 +51,6 @@ router.get('/profile', isLoggedIn, async (req, res) => {
 });
 
 
-
 // ----------------- BECOME HOST -----------------
 router.get('/become-host', isLoggedIn, async (req, res) => {
   try {
@@ -80,26 +62,5 @@ router.get('/become-host', isLoggedIn, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
-// ----------------- FAVORITES -----------------
-router.get('/favorites', isLoggedIn, async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const user = await User.findById(userId).populate('favorites');
-
-    res.render('users/favorites', {
-      user,
-      active: 'favorites'
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-});
-
-
-
-
-
 
 module.exports = router;

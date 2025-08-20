@@ -2,7 +2,7 @@ const Review=require("../models/review.js");
 const Listing=require("../models/listing.js");
 const User=require("../models/user.js");
 const Booking = require('../models/bookings.js');
-const userController = require('../controllers/users'); // Adjust path if needed
+// const userController = require('../controllers/users'); // Adjust path if needed
 // render signup page
 module.exports.renderSignUp=(req,res)=>{
     res.render("../views/users/signup.ejs");

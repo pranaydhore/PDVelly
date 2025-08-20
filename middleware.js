@@ -27,10 +27,6 @@ module.exports.isOwner=async (req,res,next) =>{
       req.flash("error","You are not the owner of this listing");
       return res.redirect(`/listings/${id}`)
     }
-
-    // await Listing.findByIdAndUpdate(id,{...req.body.listing});
-    // req.flash("success", "Listing Update Successfully !");
-    // res.redirect(`/listings/${id}`)
     next();
 };
 
@@ -63,9 +59,5 @@ module.exports.isreviewAuthor=async (req,res,next) =>{
       req.flash("error","You are not the author of this review.");
       return res.redirect(`/listings/${id}`)
     }
-
-    // await Listing.findByIdAndUpdate(id,{...req.body.listing});
-    // req.flash("success", "Listing Update Successfully !");
-    // res.redirect(`/listings/${id}`)
     next();
 };
