@@ -26,21 +26,8 @@ if (!process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET not set in environment variables');
 }
 
-<<<<<<< HEAD
 const dbUrl = process.env.ATLASDB_URL;
 
-=======
-// Ensure environment variables are present
-if (!process.env.ATLASDB_URL) {
-  throw new Error('ATLASDB_URL not set in environment variables');
-}
-if (!process.env.SESSION_SECRET) {
-  throw new Error('SESSION_SECRET not set in environment variables');
-}
-
-const dbUrl = process.env.ATLASDB_URL;
-
->>>>>>> 20a5331 (add more functionality)
 // MongoDB connection
 mongoose.connect(dbUrl)
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
@@ -111,10 +98,7 @@ app.use('/bookings', bookingsRouter);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewsRouter);
 app.use('/', userRouter);
-<<<<<<< HEAD
-=======
 
->>>>>>> 20a5331 (add more functionality)
 
 // 404 handler - last middleware
 app.use((req, res) => {
@@ -141,11 +125,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 20a5331 (add more functionality)
 const PORT = process.env.PORT || 10000; // Use port 10000 for Render
 app.listen(PORT, '0.0.0.0', () => { // Bind to all interfaces
   console.log(`Server started on http://localhost:${PORT}`);
