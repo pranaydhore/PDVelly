@@ -5,101 +5,186 @@
   <title><%= user.username %>'s Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body {
-      background-color: #eef2f7;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .profile-header {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      text-align: center;
-      margin-bottom: 50px;
-    }
-    .section-title {
-      margin-top: 40px;
-      margin-bottom: 25px;
-      font-weight: 600;
-      color: #2c3e50;
-      border-bottom: 2px solid #3498db;
-      display: inline-block;
-      padding-bottom: 5px;
-    }
-    .card-custom {
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-      padding: 20px;
-      background: #fff;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card-custom:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    }
-    .btn-host {
-      margin-top: 10px;
-    }
-    .badge-host {
-      font-size: 0.9rem;
-      padding: 0.4em 0.6em;
-    }
+    body { background: linear-gradient(135deg, #fdfdfd 0%, #ffffff 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px 0; }
+    .container { max-width: 1200px; }
+    .profile-header { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.2); }
+    .profile-header h1 { color: #2c3e50; font-weight: 700; margin-bottom: 10px; font-size: 2.5rem; }
+    .profile-header p { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 20px; }
+    .section-title { margin: 40px 0 30px 0; font-weight: 700; color: #ffffff; font-size: 2rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .section-title::after { content: ''; display: block; width: 80px; height: 4px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); margin: 10px auto; border-radius: 2px; }
+    .booking-card { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); margin-bottom: 30px; overflow: hidden; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+    .booking-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+    .booking-card-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; position: relative; }
+    .booking-status { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .status-confirmed { background: rgba(40, 167, 69, 0.9); color: white; }
+    .booking-property-image { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; }
+    .price-breakdown { background: #f8f9fa; border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 4px solid #667eea; }
+    .price-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+    .price-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem; color: #2c3e50; padding-top: 15px; border-top: 2px solid #667eea; margin-top: 15px; }
+    .btn-invoice { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; padding: 10px 25px; color: white; font-weight: 600; font-size: 0.85rem; }
+    .btn-print { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; border-radius: 25px; padding: 10px 25px; color: white; font-weight: 600; font-size: 0.85rem; }
+    .btn-logout { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); border: none; border-radius: 25px; padding: 12px 30px; color: white; font-weight: 600; }
+    .invoice-container { padding: 40px; background: white; border-radius: 15px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .invoice-header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #667eea; }
+    .invoice-header h2 { color: #667eea; font-weight: 700; margin-bottom: 5px; font-size: 2.5rem; }
+    .invoice-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+    .invoice-section h6 { color: #667eea; font-weight: 700; margin-bottom: 15px; font-size: 1.1rem; }
+    .invoice-table th { background: #f8f9fa; font-weight: 600; padding: 15px; }
+    .invoice-total { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+    @media print { .modal, .btn, .no-print { display: none !important; } }
   </style>
 </head>
 <body>
-  <div class="container mt-5">
-
-    <!-- USER INFO CARD -->
+  <div class="container">
     <div class="profile-header">
       <h1><i class="bi bi-person-circle"></i> <%= user.username %></h1>
       <p><i class="bi bi-envelope"></i> <%= user.email %></p>
       <% if (user.isHost) { %>
-        <span class="badge bg-success badge-host">Host</span>
+        <span class="badge bg-success"><i class="bi bi-house-heart-fill"></i> Verified Host</span>
       <% } else { %>
-        <a href="/user/become-host" class="btn btn-outline-primary btn-sm btn-host">Become a Host</a>
+        <a href="/listings" class="btn btn-invoice"><i class="bi bi-plus-circle"></i> Become a Host</a>
       <% } %>
       <br><br>
-      <a href="/user/logout" class="btn btn-danger">Logout</a>
+      <a href="/user/logout" class="btn btn-logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </div>
 
-    <!-- BOOKINGS SECTION -->
-    <h2 class="section-title">Your Bookings</h2>
+    <h2 class="section-title"><i class="fas fa-calendar-check"></i> Your Bookings</h2>
     <div class="row">
       <% if (!bookings || bookings.length === 0) { %>
-        <p class="text-muted">You have no bookings yet.</p>
+        <div class="empty-state text-center text-white">
+          <i class="fas fa-calendar-times fa-3x"></i>
+          <h4>No Bookings Yet</h4>
+          <p>Start exploring and make your first booking!</p>
+        </div>
       <% } else { %>
-        <% bookings.forEach(booking => { %>
-          <div class="col-md-6 col-lg-4">
-            <div class="card-custom">
-              <h5><i class="bi bi-house-door"></i> <%= booking.listing ? booking.listing.name : "Unknown Listing" %></h5>
-              <p><i class="bi bi-calendar-event"></i> Date: <%= booking.createdAt.toDateString() %></p>
+        <% bookings.forEach((booking, index) => { 
+          const nights = booking.nights || 1;
+          const basePrice = booking.listing ? booking.listing.price : 0;
+          const totalBasePrice = basePrice * nights;
+          const cleaningFee = Math.round(basePrice * 0.1);
+          const serviceFee = Math.round(basePrice * 0.05);
+          const subtotal = totalBasePrice + cleaningFee + serviceFee;
+          const gst = Math.round(subtotal * 0.18);
+          const totalAmount = subtotal + gst;
+        %>
+          <div class="col-lg-6 col-xl-4">
+            <div class="booking-card">
+              <div class="booking-card-header">
+                <h5><i class="fas fa-home"></i> <%= booking.listing ? booking.listing.title : "Property Booking" %></h5>
+                <small>Booking ID: #<%= booking._id.toString().substr(-6).toUpperCase() %></small>
+                <div class="booking-status status-confirmed"><i class="fas fa-check-circle"></i> Confirmed</div>
+              </div>
+              <div class="booking-card-body">
+                <% if (booking.listing && booking.listing.image) { %>
+                  <img src="<%= booking.listing.image.url %>" class="booking-property-image">
+                <% } %>
+                <div class="price-breakdown">
+                  <h6><i class="fas fa-receipt"></i> Price Breakdown</h6>
+                  <div class="price-item"><span>₹<%= basePrice %> × <%= nights %> nights</span><span>₹<%= totalBasePrice %></span></div>
+                  <div class="price-item"><span>Cleaning fee</span><span>₹<%= cleaningFee %></span></div>
+                  <div class="price-item"><span>Service fee</span><span>₹<%= serviceFee %></span></div>
+                  <div class="price-item"><span>GST (18%)</span><span>₹<%= gst %></span></div>
+                  <div class="price-total"><span>Total</span><span>₹<%= totalAmount %></span></div>
+                </div>
+                <button class="btn btn-invoice" onclick="showInvoice('<%= index %>')"><i class="fas fa-file-invoice"></i> View Invoice</button>
+              </div>
             </div>
           </div>
+
+          <script type="application/json" id="bookingData-<%= index %>"><%- JSON.stringify({
+            bookingId: "#"+booking._id.toString().substr(-6).toUpperCase(),
+            propertyTitle: booking.listing ? booking.listing.title : "Property Booking",
+            propertyLocation: booking.listing ? (booking.listing.location + ', ' + booking.listing.country) : 'N/A',
+            nights, basePrice, totalBasePrice, cleaningFee, serviceFee, gst, totalAmount,
+            checkIn: booking.checkIn ? new Date(booking.checkIn).toLocaleDateString('en-IN') : 'N/A',
+            checkOut: booking.checkOut ? new Date(booking.checkOut).toLocaleDateString('en-IN') : 'N/A',
+            guests: booking.guests || 1,
+            bookingDate: booking.createdAt ? new Date(booking.createdAt).toLocaleDateString('en-IN') : 'N/A',
+            customerName: booking.firstName || user.username,
+            customerEmail: booking.email || user.email
+          }) %></script>
         <% }) %>
       <% } %>
     </div>
-
-    <!-- USER LISTINGS SECTION -->
-    <h2 class="section-title">Listings Added by You</h2>
-    <div class="row">
-      <% if (!user.listings || user.listings.length === 0) { %>
-        <p class="text-muted">You haven't added any listings yet.</p>
-      <% } else { %>
-        <% user.listings.forEach(listing => { %>
-          <div class="col-md-6 col-lg-4">
-            <div class="card-custom">
-              <h5><i class="bi bi-building"></i> <%= listing.title %></h5>
-              <p><i class="bi bi-geo-alt"></i> Location: <%= listing.location %></p>
-              <p><i class="bi bi-currency-dollar"></i> Price: $<%= listing.price %></p>
-              <a href="/listings/<%= listing._id %>" class="btn btn-primary btn-sm">View Listing</a>
-            </div>
-          </div>
-        <% }) %>
-      <% } %>
-    </div>
-
   </div>
+
+  <div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-file-invoice"></i> Booking Invoice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div id="invoiceContent" class="invoice-container"></div>
+        </div>
+        <div class="modal-footer no-print">
+          <button class="btn btn-print" onclick="printInvoice()"><i class="fas fa-print"></i> Print</button>
+          <button class="btn btn-invoice" onclick="downloadInvoice()"><i class="fas fa-download"></i> Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function showInvoice(index) {
+      const data = JSON.parse(document.getElementById(`bookingData-${index}`).textContent);
+      generateInvoice(data);
+      new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+    }
+
+    function generateInvoice(b) {
+      document.getElementById('invoiceContent').innerHTML = `
+        <div style="background:#fff; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+          <div style="text-align:center; border-bottom:3px solid #667eea; margin-bottom:25px; padding-bottom:15px;">
+            <h2 style="color:#667eea; font-weight:700; margin-bottom:5px;">PD Valley</h2>
+            <p style="margin:0; color:#333;">Travel & Accommodation Services</p>
+          </div>
+          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:25px;">
+            <div>
+              <h6 style="color:#667eea; font-weight:700; margin-bottom:5px;">Invoice</h6>
+              <p style="margin:0;"><b>ID:</b> ${b.bookingId || '<span style="color:red">Error</span>'}</p>
+              <p style="margin:0;"><b>Date:</b> ${b.bookingDate || '<span style="color:red">Error</span>'}</p>
+            </div>
+            <div>
+              <h6 style="color:#667eea; font-weight:700; margin-bottom:5px;">Customer</h6>
+              <p style="margin:0;"><b>${b.customerName || '<span style="color:red">Unknown</span>'}</b></p>
+              <p style="margin:0;">${b.customerEmail || '<span style="color:red">Missing</span>'}</p>
+            </div>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+            <thead>
+              <tr style="background:#f1f1f1; text-align:left;">
+                <th style="padding:12px;">Description</th>
+                <th style="padding:12px;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:12px;">${b.nights} nights × ₹${b.basePrice}</td><td style="padding:12px; ${b.totalBasePrice < 0 ? 'color:red;' : ''}">₹${b.totalBasePrice}</td></tr>
+              <tr><td style="padding:12px;">Cleaning Fee</td><td style="padding:12px; ${b.cleaningFee < 0 ? 'color:red;' : ''}">₹${b.cleaningFee}</td></tr>
+              <tr><td style="padding:12px;">Service Fee</td><td style="padding:12px; ${b.serviceFee < 0 ? 'color:red;' : ''}">₹${b.serviceFee}</td></tr>
+              <tr><td style="padding:12px;">GST (18%)</td><td style="padding:12px; ${b.gst < 0 ? 'color:red;' : ''}">₹${b.gst}</td></tr>
+              <tr style="background:linear-gradient(135deg, #667eea, #764ba2); color:white; font-weight:700;">
+                <td style="padding:12px;">Total</td>
+                <td style="padding:12px; ${b.totalAmount < 0 ? 'color:red;' : ''}">₹${b.totalAmount}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top:30px; font-size:0.9rem; color:#555;">Thank you for booking with PDValley! We wish you a pleasant stay.</p>
+        </div>`;
+    }
+
+    function printInvoice() { window.print(); }
+    function downloadInvoice() {
+      const blob = new Blob([document.getElementById('invoiceContent').innerHTML], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "invoice.html";
+      a.click();
+    }
+  </script>
 </body>
 </html>

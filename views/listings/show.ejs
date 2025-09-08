@@ -175,36 +175,81 @@
                                 </div>
                             </div>
 
-                            <!-- Booking Form -->
-                            <form action="/" class="booking-form" method="post" >
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <label class="form-label fw-bold">CHECK-IN</label>
-                                        <input type="date" class="form-control" style="border-radius: 8px;">
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label fw-bold">CHECK-OUT</label>
-                                        <input type="date" class="form-control" style="border-radius: 8px;">
-                                    </div>
-                                </div>
+                           <!-- Booking Form -->
+<form id="reserveForm" class="booking-form">
+  <div class="row mb-3">
+    <div class="col-6">
+      <label class="form-label fw-bold">CHECK-IN</label>
+      <input type="date" id="checkIn" class="form-control" style="border-radius: 8px;">
+    </div>
+    <div class="col-6">
+      <label class="form-label fw-bold">CHECK-OUT</label>
+      <input type="date" id="checkOut" class="form-control" style="border-radius: 8px;">
+    </div>
+  </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">GUESTS</label>
-                                    <select class="form-select" style="border-radius: 8px;">
-                                        <option value="1">1 guest</option>
-                                        <option value="2">2 guests</option>
-                                        <option value="3">3 guests</option>
-                                        <option value="4">4 guests</option>
-                                        <option value="5">5+ guests</option>
-                                    </select>
-                                </div>
+  <div class="mb-3">
+    <label class="form-label fw-bold">GUESTS</label>
+    <select id="guests" class="form-select" style="border-radius: 8px;">
+      <option value="1">1 guest</option>
+      <option value="2">2 guests</option>
+      <option value="3">3 guests</option>
+      <option value="4">4 guests</option>
+      <option value="5">5+ guests</option>
+    </select>
+  </div>
 
-                                <button type="submit" class="btn btn-danger w-100 mb-3" style="background: #ff385c; border: none; border-radius: 12px; padding: 0.8rem; font-weight: 600; font-size: 1.1rem;">
-                                    Reserve
-                                </button>
-                                <p class="text-center text-muted mb-3" style="font-size: 0.9rem;">
-                                    You won't be charged yet
-                                </p>
+  <button type="button" id="reserveBtn"
+    class="btn btn-danger w-100 mb-3"
+    style="background: #ff385c; border: none; border-radius: 12px; padding: 0.8rem; font-weight: 600; font-size: 1.1rem;">
+    Reserve
+  </button>
+
+  <p class="text-center text-muted mb-3" style="font-size: 0.9rem;">
+    You won't be charged yet
+  </p>
+</form>
+<!-- Success/Error message container -->
+<div id="messageBox" class="alert d-none mt-3" role="alert"></div>
+
+<!-- <button id="reserveBtn" class="btn btn-danger">Reserve</button> -->
+
+<script>
+  document.getElementById('reserveBtn').addEventListener('click', async () => {
+    const messageBox = document.getElementById('messageBox');
+    try {
+      const res = await fetch('/bookings/reserve/<%= listing._id %>', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ Green success alert
+        messageBox.className = "alert alert-success mt-3";
+        messageBox.textContent = data.message || "Reserved successfully!";
+        messageBox.classList.remove("d-none");
+
+        // redirect after short delay
+        setTimeout(() => {
+          window.location.href = "/user/profile";
+        }, 1500);
+      } else {
+        // ❌ Red error alert
+        messageBox.className = "alert alert-danger mt-3";
+        messageBox.textContent = data.error || "Something went wrong!";
+        messageBox.classList.remove("d-none");
+      }
+    } catch (err) {
+      messageBox.className = "alert alert-danger mt-3";
+      messageBox.textContent = "Something went wrong! Please try again.";
+      messageBox.classList.remove("d-none");
+    }
+  });
+</script>
+
+
+
 
                                 <!-- Price Breakdown -->
                                 <div class="price-breakdown">

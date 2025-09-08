@@ -4,14 +4,31 @@ const ExpressError =require("./utils/ExpressError.js");
 const Review=require("./models/review.js");
 
 
-module.exports.isLoggedIn=(req,res,next) =>{
-    if(!req.isAuthenticated()) {
-      req.session.redirectUrl=req.originalUrl;
-      req.flash("error","You Must be logged in to create listing!");
-      return res.redirect("/login");
+// module.exports.isLoggedIn=(req,res,next) =>{
+//     if(!req.isAuthenticated()) {
+//       req.session.redirectUrl=req.originalUrl;
+//       req.flash("error","You Must be logged in to create listing!");
+//       return res.redirect("/login");
+//     }
+//   next();
+// };
+
+module.exports.isLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    req.session.redirectUrl = req.originalUrl;
+
+    // If request expects JSON (like fetch)
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+      return res.status(401).json({ message: "You must be logged in to reserve!" });
     }
+
+    // For normal browser navigation
+    req.flash("error", "You must be logged in to create listing!");
+    return res.redirect("/login");
+  }
   next();
 };
+
 
 module.exports.saveRedirectUrl=(req,res,next) =>{
   if(req.session.redirectUrl) {

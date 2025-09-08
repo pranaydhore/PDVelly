@@ -63,4 +63,7 @@ router.get('/become-host', isLoggedIn, async (req, res) => {
   }
 });
 
+router.get("/profile", isLoggedIn, userController.renderUserProfile);
+
+
 module.exports = router;

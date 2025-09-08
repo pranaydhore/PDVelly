@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const Listing = require("../models/listing");
 const { isLoggedIn } = require("../middleware");
+const bookingController = require("../controllers/bookings");
 
 // Add/remove favorite with toggle (AJAX version)
 router.post("/favorites/:id", isLoggedIn, async (req, res) => {
@@ -35,5 +36,7 @@ router.post("/favorites/:id", isLoggedIn, async (req, res) => {
   }
 });
 
+
+router.post("/reserve/:id", isLoggedIn, bookingController.reserveListing);
 
 module.exports = router;
